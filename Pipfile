@@ -1,0 +1,25 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "*"
+django-countries = "*"
+pillow = "*"
+django-environ = "*"
+psycopg2-binary = "*"
+gunicorn = "*"
+
+[dev-packages]
+coverage = "*"
+pytest = "*"
+pytest-django = "*"
+pytest-cov = "*"
+djlint = "*"
+ruff = "*"
+black = "*"
+bandit = "*"
+
+[requires]
+python_version = "3.11"

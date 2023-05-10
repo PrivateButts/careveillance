@@ -1,0 +1,62 @@
+[tool.ruff]
+line-length = 100
+ignore = ["D203"]
+
+[tool.black]
+line-length = 100
+target-version = ['py310']
+extend-exclude = '''
+# A regex preceded with ^/ will apply only to files and directories
+# in the root of the project.
+(
+    .*/migrations/*
+)
+'''
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+DJANGO_SETTINGS_MODULE = "careveillance.settings"
+python_files = "tests.py test_*.py *_tests.py"
+addopts = "--cov=. --cov-report=html --cov-report=term-missing"
+
+[tool.coverage.run]
+branch = false
+source = ['.']
+omit = [
+    # omit anything in a .local directory anywhere
+    "*/.local/*",
+    "*/migrations/*",
+    # omit tests
+    "*/tests/*",
+    "*/test_*.py",
+    "*/tests.py",
+    # omit wsgi/asgi files
+    "careveillance/asgi.py",
+    "careveillance/wsgi.py",
+    "manage.py",
+    # omit specific files
+]
+
+[tool.coverage.report]
+# Regexes for lines to exclude from consideration
+exclude_lines = [
+    # Have to re-enable the standard pragma
+    "pragma: no cover",
+
+    # Don't complain about missing debug-only code:
+    "def __repr__",
+    "if self\\.debug",
+
+    # Don't complain if tests don't hit defensive assertion code:
+    "raise AssertionError",
+    "raise NotImplementedError",
+
+    # Don't complain if non-runnable code isn't run:
+    "if 0:",
+    "if __name__ == .__main__.:",
+]
+
+ignore_errors = true
+
+[tool.coverage.html]
+directory = "htmlcov"

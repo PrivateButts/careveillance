@@ -1,0 +1,41 @@
+### Visual Studio Code ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+
+# Python
+__pycache__
+*.py[cod]
+.pytest_cache
+
+# Django
+*.log
+*.sqlite*
+*.sqlite3*
+.env
+/staticfiles/
+/mediafiles/
+/media/
+
+# Coverage
+htmlcov
+.coverage
+.coverage.*
+cov.xml
+
+# Javascript
+node_modules
+static/webpack/
+
+e2e-test.ps1
+/postgres/
+coverage.lcov
+coverage.xml
+report.xml
+
+webpack-stats.json
+webpack-analysis.json

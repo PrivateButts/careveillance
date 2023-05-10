@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+    nginx:
+        build:
+            context: ./docker/nginx
+            dockerfile: ./Dockerfile
+        ports:
+            - 8000:80
+        depends_on:
+            - web
+        volumes:
+            - media_files:/var/www/media
+            - static_files:/var/www/static
+
+    db:
+        image: postgres
+        volumes:
+            - postgres_db:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_NAME=careveillance
+            - POSTGRES_DB=careveillance
+            - POSTGRES_USER=careveillanceuser
+            - POSTGRES_PASSWORD=insecureChangeThis
+
+    web:
+        build:
+            context: ./
+            dockerfile: ./docker/web/Dockerfile
+        volumes:
+            - media_files:/usr/src/careveillance/mediafiles
+            - static_files:/usr/src/careveillance/staticfiles
+        environment:
+            - SECRET_KEY=django-insecure-3g!&1-%o7u$r$@s$1doy16^n8hjjazdsn2h)#!vw*ufkn1c&0e
+            - DATABASE_URL=postgresql://careveillanceuser:insecureChangeThis@db:5432/careveillance
+            - GUNICORN_WORKERS=10
+            - CSRF_TRUSTED_ORIGINS=http://localhost:8000
+        depends_on:
+            - db
+
+volumes:
+    postgres_db:
+    shared_static:
+    static_files:
+    media_files:
