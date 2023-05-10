@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_countries",
-    "cameras",
 ]
 
 MIDDLEWARE = [
