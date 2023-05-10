@@ -16,5 +16,8 @@ vt:
 run:
     pipenv run python manage.py runserver
 
+manage *COMMAND:
+    pipenv run python manage.py {{COMMAND}}
+
 docker-dev *COMMAND:
     docker compose -f docker-compose.dev.yml {{COMMAND}}

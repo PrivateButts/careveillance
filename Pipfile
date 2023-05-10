@@ -5,7 +5,6 @@ name = "pypi"
 
 [packages]
 django = "*"
-django-countries = "*"
 pillow = "*"
 django-environ = "*"
 psycopg2-binary = "*"
