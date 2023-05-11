@@ -9,6 +9,9 @@ pillow = "*"
 django-environ = "*"
 psycopg2-binary = "*"
 gunicorn = "*"
+celery = {extras = ["redis"], version = "*"}
+django-celery-beat = "*"
+django-watchman = "*"
 
 [dev-packages]
 coverage = "*"

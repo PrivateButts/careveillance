@@ -39,3 +39,4 @@ report.xml
 
 webpack-stats.json
 webpack-analysis.json
+celerybeat-schedule

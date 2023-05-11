@@ -1,6 +1,7 @@
-version: "3.8"
-
 services:
+    redis:
+        image: redis:7
+
     nginx:
         build:
             context: ./docker/nginx
@@ -22,8 +23,15 @@ services:
             - POSTGRES_DB=careveillance
             - POSTGRES_USER=careveillanceuser
             - POSTGRES_PASSWORD=insecureChangeThis
+        healthcheck:
+            test: [ "CMD-SHELL", "pg_isready" ]
+            interval: 5s
+            timeout: 5s
+            retries: 10
 
     web:
+        &app-base
+        image: privatebutts/careveillance:latest
         build:
             context: ./
             dockerfile: ./docker/web/Dockerfile
@@ -33,11 +41,39 @@ services:
             - shared_static:/usr/src/careveillance/static
             - static_files:/usr/src/careveillance/staticfiles
         environment:
-            - DATABASE_URL=postgresql://careveillanceuser:insecureChangeThis@db:5432/careveillance
-            - CSRF_TRUSTED_ORIGINS=http://localhost:8000,http://127.0.0.1:8000
+            &app-env
+            DATABASE_URL: "postgresql://careveillanceuser:insecureChangeThis@db:5432/careveillance"
+            CSRF_TRUSTED_ORIGINS: "http://localhost:8000,http://127.0.0.1:8000"
         command: python manage.py runserver 0.0.0.0:8000
+        healthcheck:
+            test: [ "CMD", "python", "manage.py", "watchman" ]
+            interval: 5s
+            timeout: 5s
+            retries: 10
+
         depends_on:
-            - db
+            &app-deps
+            db:
+                condition: service_healthy
+            redis:
+                condition: service_started
+
+    scheduler:
+        &celery
+        <<: *app-base
+        environment:
+            <<: *app-env
+            CELERY_BROKER_URL: "redis://redis:6379/0"
+        command: celery -A careveillance beat -l info
+        entrypoint: ""
+        depends_on:
+            <<: *app-deps
+            web:
+                condition: service_healthy
+
+    worker:
+        <<: *celery
+        command: celery -A careveillance worker -l info
 
 volumes:
     postgres_db:
