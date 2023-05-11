@@ -33,17 +33,19 @@ class Schedule(BaseModel):
 
     def time_next_due(self) -> timezone.datetime:
         """Return the next time this schedule is due."""
-        if not self.tasks.filter(completed_at__isnull=False).exists():
+        if not self.task_set.filter(completed_at__isnull=False).exists():
             return self.created_at + self.reoccurrence
         return (
-            self.tasks.filter(completed_at__isnull=False).latest("completed_at").completed_at
+            self.task_set.filter(completed_at__isnull=False).latest("completed_at").completed_at
             + self.reoccurrence
         )
 
     def counter_next_due(self) -> float:
         """Return the next counter this schedule is due."""
         most_recent_log = self.counter_logs.latest("created_at")
-        last_completed_task = self.tasks.filter(completed_at__isnull=False).latest("completed_at")
+        last_completed_task = self.task_set.filter(completed_at__isnull=False).latest(
+            "completed_at"
+        )
         base_value = last_completed_task.value if last_completed_task else 0
         current_value = most_recent_log.value if most_recent_log else 0
         return base_value + self.tick - current_value

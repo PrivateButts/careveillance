@@ -12,6 +12,7 @@ gunicorn = "*"
 celery = {extras = ["redis"], version = "*"}
 django-celery-beat = "*"
 django-watchman = "*"
+factory-boy = "*"
 
 [dev-packages]
 coverage = "*"
